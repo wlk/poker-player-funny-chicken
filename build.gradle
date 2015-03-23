@@ -1,22 +1,25 @@
-apply plugin: 'scala'
+apply plugin: 'java'
 apply plugin: 'war'
 apply plugin: 'tomcat'
+apply plugin: 'scala'
 
-sourceCompatibility = 1.6
+sourceCompatibility = 1.7
 version = '1.0'
 
 repositories {
     mavenCentral()
 }
 
+def final HTTP_PORT = System.getenv('PORT') ? System.getenv('PORT').toInteger() : 8080
+
 // change this by n*100 to offset the ports of the tomcat server
 // don't forget to change the port accordingly in config.yml too!
 def portOffset = 0
 
 tomcatRun {
-	httpPort = 8080 + portOffset
-	ajpPort = 8009 + portOffset
-	stopPort = 8081 + portOffset
+    httpPort = HTTP_PORT + portOffset
+    ajpPort = 8009 + portOffset
+    stopPort = 8081 + portOffset
     contextPath = '/'
 }
 
@@ -48,3 +51,5 @@ dependencies {
         exclude group: 'org.eclipse.jdt.core.compiler', module: 'ecj'
     }
 }
+
+task stage(dependsOn: [assemble])
