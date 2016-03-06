@@ -76,29 +76,29 @@ class PlayerTest extends FunSpec with MustMatchers {
     points must be > 0.8
   }
 
-//  it("game pair") {
-//
-//    val game = new Game(
-//      List(
-//        new Player("p1", 1000, "active", 0, List(Card("Q", "hearts"), Card("Q", "spades")).asJava, Player.VERSION, 0),
-//        new Player("p2", 1000, "active", 0, List(Card("7", "clubs"), Card("K", "clubs")).asJava, Player.VERSION, 1),
-//        new Player("p2", 1000, "active", 0, List(Card("8", "hearts"), Card("K", "hearts")).asJava, Player.VERSION, 2)
-//      ).asJava,
-//      "tid",
-//      "gid",
-//      0, // round
-//      0, // bet_index
-//      10, // small_blind
-//      1, // orbits
-//      1, // dealer
-//      new ju.ArrayList[Card](), // community_cards
-//      0, // current_buy_in
-//      1000, // pot
-//      10, // minimum_raise
-//      0) //in_action
-//
-//    Player.requestGame(game) must be(100)
-//  }
+  it("super test") {
+
+    val game = new Game(
+      List(
+        new Player("p1", 1000, "active", 0, List(Card("2", "spades"), Card("3", "hearts")).asJava, Player.VERSION, 0),
+        new Player("p2", 1000, "active", 0, List(Card("7", "clubs"), Card("K", "clubs")).asJava, Player.VERSION, 1),
+        new Player("p2", 1000, "active", 0, List(Card("8", "hearts"), Card("K", "hearts")).asJava, Player.VERSION, 2)
+      ).asJava,
+      "tid",
+      "gid",
+      4, // round
+      0, // bet_index
+      10, // small_blind
+      1, // orbits
+      1, // dealer
+      new ju.ArrayList[Card](), // community_cards
+      0, // current_buy_in
+      1000, // pot
+      10, // minimum_raise
+      0) //in_action
+
+    Player.requestGame(game) must be(0)
+  }
 
   it("hasColor") {
     val cl : List[Card] = List(Card("A", "spades"), Card("K", "spades"), Card("Q", "spades"), Card("J", "spades"), Card("10", "spades") )
