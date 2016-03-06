@@ -5,7 +5,7 @@ object CardsEstimator {
     if (table.isEmpty) {
       Math.min(handPoints(hand)*5, 1)
     } else {
-      Math.min(estimate(hand ++ table) + handPoints(hand), 1)
+      Math.min(estimate(hand ++ table, table) + handPoints(hand), 1)
     }
   }
 
@@ -29,21 +29,25 @@ object CardsEstimator {
     good
   }
 
-
-  def estimate(l: List[Card]): Double = {
-    def hasPair: Boolean = {
-      for {
-        c1i <- l.indices
-        c2i <- c1i + 1 until l.size
-      } yield {
-        if (l(c1i).rank.equals(l(c2i).rank)) {
-          true
-        }
+  def hasPair(l: List[Card] ): Boolean = {
+    for {
+      c1i <- l.indices
+      c2i <- c1i + 1 until l.size
+    } yield {
+      if (l(c1i).rank.equals(l(c2i).rank)) {
+        true
       }
-      false
     }
+    false
+  }
 
-    if(hasPair) {
+  def onlyWeHavePair(l: List[Card], table : List[Card]) : Boolean = {
+    hasPair(l) && !hasPair(table)
+  }
+
+  def estimate(l: List[Card], table : List[Card]): Double = {
+
+    if(onlyWeHavePair(l, table)) {
       0.9
     } else if (hasColor(l)) {
       0.95
