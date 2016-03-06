@@ -51,7 +51,7 @@ object CardsEstimator {
   }
 
   def numberOfPairs(l: List[Card]) : Int = {
-    l.groupBy(_.rank).mapValues(_.size).filter(x => x._2.eq(2)).size
+    l.groupBy(_.rank).mapValues(_.size).count(x => x._2 == 2)
   }
 
   def weHaveSecondPair(l: List[Card], table: List[Card]): Boolean = {
