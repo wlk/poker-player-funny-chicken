@@ -5,11 +5,13 @@ import scala.collection.JavaConverters._
 import java.{util => ju}
 
 object Player {
-  val VERSION = "Funny Chicken 1"
+  val VERSION = "Funny Chicken 2"
+
+  var game: Game = _
 
   def betRequest(request: JsonElement) = {
     val gson = new Gson
-    val game: Game = gson.fromJson(request, classOf[Game])
+    game = gson.fromJson(request, classOf[Game])
     requestGame(game)
   }
 
