@@ -5,7 +5,7 @@ import scala.collection.JavaConverters._
 import java.{util => ju}
 
 object Player {
-  val VERSION = "Funny Chicken"
+  val VERSION = "Funny Chicken 1"
   var game: Game = _
   val gson = new Gson
 
@@ -15,7 +15,7 @@ object Player {
   }
 
   def requestGame(game: Game) = {
-    20
+    25
   }
 
   def showdown(game: JsonElement) {
