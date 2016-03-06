@@ -9,7 +9,7 @@ object Player {
   def betRequest(request: JsonElement) = {
     val gson = new Gson
     val game = gson.fromJson(request, classOf[GameState])
-    10
+    20
   }
 
   def showdown(game: JsonElement) {
