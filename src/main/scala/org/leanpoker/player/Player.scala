@@ -7,8 +7,8 @@ object Player {
   val VERSION = "Funny Chicken"
 
   def betRequest(request: JsonElement) = {
-    val gson = new Gson
-    val game = gson.fromJson(request, classOf[GameState])
+    /*val gson = new Gson
+    val game = gson.fromJson(request, classOf[GameState])*/
     20
   }
 
