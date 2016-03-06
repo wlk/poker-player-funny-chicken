@@ -31,4 +31,12 @@ class PlayerTest extends FunSpec with MustMatchers {
     Player.game.players.asScala.head.stack must be(1000)
   }
 
+  it("good hand") {
+    val cl : List[Card] = List(Card("A", "spades"), Card("K", "spades") )
+
+    val points = CardsEstimator.handPoints(cl)
+
+    points must be > 0.1
+  }
+
 }

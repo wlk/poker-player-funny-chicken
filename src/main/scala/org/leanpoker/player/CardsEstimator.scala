@@ -1,8 +1,12 @@
 package org.leanpoker.player
 
 object CardsEstimator {
-  def estimateWithHand(hand: List[Card], table: List[Card]): Double = {
-    Math.min(estimate(hand ++ table) + handPoints(hand), 1)
+  def estimateWithHand(hand : List[Card], table: List[Card]): Double = {
+    if (table.isEmpty) {
+      Math.min(handPoints(hand)*5, 1)
+    } else {
+      Math.min(estimate(hand ++ table) + handPoints(hand), 1)
+    }
   }
 
   def estimate(l: List[Card]): Double = {
