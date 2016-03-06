@@ -5,7 +5,9 @@ import scala.collection.JavaConverters._
 class GameEngine(game: Game) {
 
   def processGame: Int = {
-    val estimation = CardsEstimator.estimateWithHand(myCards, game.community_cards.asScala.toList)
+    val estimation = lowPlayersEstimationFix(CardsEstimator.estimateWithHand(myCards, game.community_cards.asScala.toList),
+      getNumberOfActivePlayers)
+
 
     val toBet = if (estimation >= 0.8) {
       // good cards
@@ -46,6 +48,21 @@ class GameEngine(game: Game) {
     } else {
       toBet
     }
+  }
+
+  def lowPlayersEstimationFix(estimation : Double, numberOfPlayers : Int): Double = {
+    if(numberOfPlayers < 4) {
+      if(estimation > 0.8)
+        1
+      else
+        0
+    }
+    estimation
+  }
+
+  def getNumberOfActivePlayers = {
+    val players = game.players.asScala
+    players.filter(_.status == "active").size
   }
 
   def shouldCall = {
