@@ -7,7 +7,7 @@ class GameEngine(game: Game) {
   def processGame: Int = {
     val estimation = CardsEstimator.estimateWithHand(myCards, game.community_cards.asScala.toList)
 
-    if (estimation >= 0.8) {
+    val toBet = if (estimation >= 0.8) {
       // good cards
       if (isAllIn) {
         // all in
@@ -24,10 +24,10 @@ class GameEngine(game: Game) {
         if (isAllIn) {
           0
         } else {
-          if(estimation > 0.5 && shouldCall){
+          if (estimation > 0.5 && shouldCall) {
             call
           } else {
-            if(shouldCall) {
+            if (shouldCall) {
               minimumRaise
             } else {
               0
@@ -35,6 +35,12 @@ class GameEngine(game: Game) {
           }
         }
       }
+    }
+
+    if (game.round < 2) {
+      Math.max(toBet, 60)
+    } else {
+      toBet
     }
   }
 
