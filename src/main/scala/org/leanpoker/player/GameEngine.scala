@@ -18,7 +18,7 @@ class GameEngine(game: Game) {
         (minimumRaise * (1 + estimation)).toInt
       }
     } else {
-      if (estimation < 0.3) {
+      if (estimation < 0.2) {
         // bad cards
         0
       } else {
@@ -56,17 +56,19 @@ class GameEngine(game: Game) {
         1
       else
         0
+    } else {
+      estimation
     }
-    estimation
+
   }
 
   def getNumberOfActivePlayers = {
     val players = game.players.asScala
-    players.filter(_.status == "active").size
+    players.count(_.status == "active")
   }
 
   def shouldCall = {
-    stack * 0.2 <= call
+    stack * 0.4 <= call
   }
 
   def estimate(stack: Int, estimated: Double, minimumRaise: Int, call: Int): Int = {
