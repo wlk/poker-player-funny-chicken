@@ -29,12 +29,20 @@ object Player {
     game.players.asScala(game.in_action).hole_cards.asScala.toList
   }
 
-  def rasingGame(game: Game): Int = {
+  def isAllIn = {
+    minimumRaise >= game.players.asScala(game.in_action).stack
+  }
+
+  def minimumRaise = {
     def raise(current_buy_in : Int, my_bet: Int, minimum_raise: Int): Int = {
       current_buy_in - my_bet + minimum_raise
     }
+    raise(game.current_buy_in, game.players.asScala(game.in_action).bet, game.minimum_raise)
+  }
 
-    val minimumRaise = raise(game.current_buy_in, game.players.asScala(game.in_action).bet, game.minimum_raise)
+
+
+  def rasingGame(game: Game): Int = {
     val estimation = CardsEstimator.estimate(game.community_cards.asScala.toList ++ myCards)
 
     if(estimation >= 0.8) { // good cards
@@ -48,7 +56,11 @@ object Player {
       if (estimation < 0.3) { // bad cards
         0
       } else { // ok cards
-        minimumRaise
+        if(isAllIn){
+          0
+        } else {
+          minimumRaise
+        }
       }
     }
   }
