@@ -24,7 +24,7 @@ class GameEngine(game: Game) {
         if (isAllIn) {
           0
         } else {
-          if(estimation > 0.5){
+          if(estimation > 0.5 && shouldCall){
             call
           } else {
             minimumRaise
@@ -32,6 +32,10 @@ class GameEngine(game: Game) {
         }
       }
     }
+  }
+
+  def shouldCall = {
+    stack * 0.2 <= call
   }
 
   def estimate(stack: Int, estimated: Double, minimumRaise: Int, call: Int): Int = {
@@ -67,7 +71,11 @@ class GameEngine(game: Game) {
   }
 
   def isAllIn = {
-    minimumRaise >= game.players.asScala(game.in_action).stack
+    minimumRaise >= stack
+  }
+
+  def stack = {
+    game.players.asScala(game.in_action).stack
   }
 
   def call = {
