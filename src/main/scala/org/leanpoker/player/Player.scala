@@ -31,7 +31,12 @@ object Player {
     }
 
     val toReturn = raise(game.current_buy_in, game.players.asScala(game.in_action).bet, game.minimum_raise)
-    toReturn
+    if(toReturn >= game.players.asScala(game.in_action).stack) { //all in
+      0
+    } else {
+      toReturn + 1
+    }
+
   }
 
 
