@@ -1,9 +1,9 @@
 package org.leanpoker.player
 
 object CardsEstimator {
-  def estimateWithHand(hand : List[Card], table: List[Card]): Double = {
+  def estimateWithHand(hand: List[Card], table: List[Card]): Double = {
     if (table.isEmpty) {
-      Math.min(handPoints(hand)*5, 1)
+      Math.min(handPoints(hand) * 5, 1)
     } else {
       Math.min(estimate(hand ++ table) + handPoints(hand), 1)
     }
@@ -79,17 +79,17 @@ object CardsEstimator {
     }
   }
 
-  def sameColor(card1: Card, card2: Card) : Double = {
-    if(card1.suit.equals(card2.suit)) 0.05
+  def sameColor(card1: Card, card2: Card): Double = {
+    if (card1.suit.equals(card2.suit)) 0.05
     else 0.0
   }
 
   def handPoints(l: List[Card]): Double = {
     val card1 = l.head
     val card2 = l(1)
-    if(card1.rank.equals(card2.rank))
+    if (card1.rank.equals(card2.rank))
       0.2
     else
-    getPointsFromCard(card1) + getPointsFromCard(card2) + howFar(card1, card2) + sameColor(card1, card2)
+      getPointsFromCard(card1) + getPointsFromCard(card2) + howFar(card1, card2) + sameColor(card1, card2)
   }
 }

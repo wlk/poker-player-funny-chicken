@@ -40,27 +40,59 @@ class PlayerTest extends FunSpec with MustMatchers {
     points must be > 0.1
   }
 
-  it("game pair") {
-
-    val p1 = new Player("p1", 1000, "active", 0, List(Card("Q", "hearts"), Card("Q", "spades")).asJava, Player.VERSION, 0)
-    val p2 = new Player("p2", 1000, "active", 0, List(Card("7", "clubs"), Card("K", "clubs")).asJava, Player.VERSION, 1)
-
-    val game = new Game(
-      List(p1, p2).asJava,
-      "tid",
-      "gid",
-      0, // round
-      1, // bet_index
-      10, // small_blind
-      7, // orbits
-      1, // dealer
-      new ju.ArrayList[Card](), // community_cards
-      0, // current_buy_in
-      1000, // pot
-      10, // minimum_raise
-      0) //in_action
-
-    Player.requestGame(game) must be(100)
+  it("cards pair in hand empty table") {
+    val cl: List[Card] = List(Card("Q", "spades"), Card("Q", "hearts"))
+    val points = CardsEstimator.estimateWithHand(cl, List.empty)
+    points must be > 0.9
   }
+
+  it("cards pair in hand [3, 3]") {
+    val cl: List[Card] = List(Card("3", "spades"), Card("3", "hearts"))
+    val points = CardsEstimator.estimateWithHand(cl, List.empty)
+    points must be > 0.7
+  }
+
+  it("cards in hand [3, 9]") {
+    val cl: List[Card] = List(Card("3", "spades"), Card("9", "hearts"))
+    val points = CardsEstimator.estimateWithHand(cl, List.empty)
+    points must be < 0.3
+  }
+
+  it("cards pair in hand table [cQ, hK]") {
+    val cl: List[Card] = List(Card("9", "spades"), Card("9", "hearts"))
+    val points = CardsEstimator.estimateWithHand(cl, List(Card("Q", "clubs"), Card("K", "hearts")))
+    points must be > 0.7
+  }
+
+  it("cards pair in hand table [cJ, cQ, hK, hA]") {
+    val cl: List[Card] = List(Card("10", "spades"), Card("9", "hearts"))
+    val points = CardsEstimator.estimateWithHand(cl, List(Card("J", "clubs"), Card("Q", "clubs"), Card("K", "hearts"), Card("A", "hearts")))
+    println(points)
+    points must be > 0.9
+  }
+
+//  it("game pair") {
+//
+//    val game = new Game(
+//      List(
+//        new Player("p1", 1000, "active", 0, List(Card("Q", "hearts"), Card("Q", "spades")).asJava, Player.VERSION, 0),
+//        new Player("p2", 1000, "active", 0, List(Card("7", "clubs"), Card("K", "clubs")).asJava, Player.VERSION, 1),
+//        new Player("p2", 1000, "active", 0, List(Card("8", "hearts"), Card("K", "hearts")).asJava, Player.VERSION, 2)
+//      ).asJava,
+//      "tid",
+//      "gid",
+//      0, // round
+//      0, // bet_index
+//      10, // small_blind
+//      1, // orbits
+//      1, // dealer
+//      new ju.ArrayList[Card](), // community_cards
+//      0, // current_buy_in
+//      1000, // pot
+//      10, // minimum_raise
+//      0) //in_action
+//
+//    Player.requestGame(game) must be(100)
+//  }
 
 }
