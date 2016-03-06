@@ -11,7 +11,7 @@ import javax.servlet.http.HttpServletResponse
 class PlayerServlet extends HttpServlet {
 
     override def doGet(req:HttpServletRequest, resp:HttpServletResponse) {
-        resp.getWriter().print("Scala player is running")
+        resp.getWriter.print("Scala player is running")
     }
 
     @Override
@@ -19,12 +19,12 @@ class PlayerServlet extends HttpServlet {
         req.getParameter("action") match {
           case "bet_request" =>
             val gameState = req.getParameter("game_state")
-            resp.getWriter().print(Player.betRequest(new JsonParser().parse(gameState)))
+            resp.getWriter.print(Player.betRequest(new JsonParser().parse(gameState)))
           case "showdown" =>
             val gameState = req.getParameter("game_state")
             Player.showdown(new JsonParser().parse(gameState))
           case _ =>
-            resp.getWriter().print(Player.VERSION)
+            resp.getWriter.print(Player.VERSION)
         }
     }
 }
