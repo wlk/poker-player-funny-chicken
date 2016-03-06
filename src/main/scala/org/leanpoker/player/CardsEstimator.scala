@@ -5,23 +5,16 @@ object CardsEstimator {
     if (table.isEmpty) {
       Math.min(handPoints(hand) * 5, 1)
     } else {
-      Math.min(estimate(hand ++ table) + handPoints(hand), 1)
+      Math.min(estimate(hand ++ table, table) + handPoints(hand), 1)
     }
   }
 
-  def estimate(l: List[Card]): Double = {
+  def hasColor(l: List[Card]) : Boolean = {
+    l.groupBy(_.suit).mapValues(_.size).exists(g => g._2 > 3)
+  }
+
+  def countPoints(l: List[Card]): Double = {
     var good = 0.2
-    for {
-      c1i <- l.indices
-      c2i <- c1i + 1 until l.size
-    } yield {
-      if (l(c1i).rank.equals(l(c2i).rank)) {
-        good = 0.9
-        return good
-      }
-    }
-
-
     for {
       c <- l
     } yield {
@@ -34,6 +27,34 @@ object CardsEstimator {
       }
     }
     good
+  }
+
+  def hasPair(l: List[Card] ): Boolean = {
+    for {
+      c1i <- l.indices
+      c2i <- c1i + 1 until l.size
+    } yield {
+      if (l(c1i).rank.equals(l(c2i).rank)) {
+        true
+      }
+    }
+    false
+  }
+
+  def onlyWeHavePair(l: List[Card], table : List[Card]) : Boolean = {
+    hasPair(l) && !hasPair(table)
+  }
+
+  def estimate(l: List[Card], table : List[Card]): Double = {
+
+    if(onlyWeHavePair(l, table)) {
+      0.9
+    } else if (hasColor(l)) {
+      0.95
+    } else {
+      countPoints(l)
+    }
+
   }
 
   def getPointsFromCard(card1: Card): Double = {
@@ -90,6 +111,6 @@ object CardsEstimator {
     if (card1.rank.equals(card2.rank))
       0.2
     else
-      getPointsFromCard(card1) + getPointsFromCard(card2) + howFar(card1, card2) + sameColor(card1, card2)
+    getPointsFromCard(card1) + getPointsFromCard(card2) + /*howFar(card1, card2) + */ sameColor(card1, card2)
   }
 }
