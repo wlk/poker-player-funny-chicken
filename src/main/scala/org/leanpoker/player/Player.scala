@@ -5,7 +5,7 @@ import scala.collection.JavaConverters._
 import java.{util => ju}
 
 object Player {
-  val VERSION = "Funny Chicken 2"
+  val VERSION = "Funny Chicken 3"
 
   var game: Game = _
 
@@ -16,8 +16,25 @@ object Player {
   }
 
   def requestGame(game: Game) = {
-    25
+    val shouldRaise = true
+    if(shouldRaise){
+      rasingGame(game)
+    } else {
+      25
+    }
+
   }
+
+  def rasingGame(game: Game): Int = {
+    def raise(current_buy_in : Int, my_bet: Int, minimum_raise: Int): Int = {
+      current_buy_in - my_bet + minimum_raise
+    }
+
+    val toReturn = raise(game.current_buy_in, game.players.asScala(game.in_action).bet, game.minimum_raise)
+    toReturn
+  }
+
+
 
   def showdown(game: JsonElement) {
 
