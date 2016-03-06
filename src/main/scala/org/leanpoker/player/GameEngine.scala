@@ -38,7 +38,11 @@ class GameEngine(game: Game) {
     }
 
     if (game.round < 2) {
-      Math.max(toBet, 60)
+      val weBetEarly = Math.max(toBet, 60)
+      if (game.current_buy_in > weBetEarly)
+        0
+      else
+        weBetEarly
     } else {
       toBet
     }
