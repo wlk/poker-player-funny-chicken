@@ -1,33 +1,38 @@
 package org.leanpoker.player
 
 object CardsEstimator {
-  def estimateWithHand(hand : List[Card], table: List[Card]): Double = {
+  def estimateWithHand(hand: List[Card], table: List[Card]): Double = {
     Math.min(estimate(hand ++ table) + handPoints(hand), 1)
   }
 
   def estimate(l: List[Card]): Double = {
     var good = 0.2
     for {
-      c1 <- l
-      c2 <- l
+      c1i <- l.indices
+      c2i <- c1i + 1 until l.size
     } yield {
-      if (c1.rank.equals(c2.rank)) {
+      if (l(c1i).rank.equals(l(c2i).rank)) {
         good = 0.9
         return good
-      } else {
-        c1.rank match {
-          case "A" => good += 0.05
-          case "K" => good += 0.04
-          case "Q" => good += 0.03
-          case "J" => good += 0.02
-          case "10" => good += 0.01
-        }
+      }
+    }
+
+
+    for {
+      c <- l
+    } yield {
+      c.rank match {
+        case "A" => good += 0.05
+        case "K" => good += 0.04
+        case "Q" => good += 0.03
+        case "J" => good += 0.02
+        case "10" => good += 0.01
       }
     }
     good
   }
 
-  def getPointsFromCard(card1: Card) : Double = {
+  def getPointsFromCard(card1: Card): Double = {
     card1.rank match {
       case "A" => 0.06
       case "K" => 0.05
@@ -59,16 +64,20 @@ object CardsEstimator {
     }
   }
 
-  def howFar(card1: Card, card2: Card) : Double = {
-    val position1 : Int = getPosition(card1)
-    val position2 : Int = getPosition(card2)
+  def howFar(card1: Card, card2: Card): Double = {
+    val position1: Int = getPosition(card1)
+    val position2: Int = getPosition(card2)
     val diff = 5 - Math.abs(position2 - position1)
-    if( diff < 0) 0 else diff * 0.01
+    if (diff < 0) {
+      0
+    } else {
+      diff * 0.01
+    }
   }
 
   def handPoints(l: List[Card]): Double = {
     val card1 = l.head
     val card2 = l(1)
-    getPointsFromCard(card1) + getPointsFromCard(card2) + howFar(card1,card2)
+    getPointsFromCard(card1) + getPointsFromCard(card2) + howFar(card1, card2)
   }
 }
