@@ -16,6 +16,7 @@ object Player {
     } catch {
       case e: Throwable =>
         println("error" + e)
+        Console.err.println("error" + e)
         0
     }
   }
