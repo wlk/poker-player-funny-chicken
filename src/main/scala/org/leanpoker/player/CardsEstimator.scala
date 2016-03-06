@@ -24,6 +24,7 @@ object CardsEstimator {
         case "Q" => good += 0.03
         case "J" => good += 0.02
         case "10" => good += 0.01
+        case _ => good
       }
     }
     good
