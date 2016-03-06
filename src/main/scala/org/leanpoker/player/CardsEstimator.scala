@@ -127,7 +127,7 @@ object CardsEstimator {
   def handPoints(l: List[Card]): Double = {
     val card1 = l.head
     val card2 = l(1)
-    if (card1.rank.equals(card2.rank) && getPosition(card1)>9)
+    if (card1.rank.equals(card2.rank) && getPosition(card1) >= 8)
       0.2
     else
     getPointsFromCard(card1) + getPointsFromCard(card2)  /* + howFar(card1, card2) */ /* + sameColor(card1, card2)*/
