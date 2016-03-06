@@ -64,11 +64,16 @@ class PlayerTest extends FunSpec with MustMatchers {
     points must be > 0.7
   }
 
-  it("cards pair in hand table [cJ, cQ, hK, hA]") {
+  it("cards pair in hand table [c9, cQ, hK]") {
+    val cl: List[Card] = List(Card("9", "spades"), Card("9", "hearts"))
+    val points = CardsEstimator.estimateWithHand(cl, List(Card("9", "clubs"), Card("Q", "clubs"), Card("K", "hearts")))
+    points must be > 0.8
+  }
+
+  it("cards pair in hand table [c9, h9, hK]") {
     val cl: List[Card] = List(Card("10", "spades"), Card("9", "hearts"))
-    val points = CardsEstimator.estimateWithHand(cl, List(Card("J", "clubs"), Card("Q", "clubs"), Card("K", "hearts"), Card("A", "hearts")))
-    println(points)
-    points must be > 0.9
+    val points = CardsEstimator.estimateWithHand(cl, List(Card("9", "clubs"), Card("Q", "clubs"), Card("9", "hearts")))
+    points must be > 0.8
   }
 
 //  it("game pair") {
