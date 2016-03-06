@@ -10,9 +10,13 @@ object Player {
   var game: Game = _
 
   def betRequest(request: JsonElement) = {
-    val gson = new Gson
-    game = gson.fromJson(request, classOf[Game])
-    requestGame(game)
+    try {
+      val gson = new Gson
+      game = gson.fromJson(request, classOf[Game])
+      requestGame(game)
+    } catch {
+      case e: Throwable => 0
+    }
   }
 
   def requestGame(game: Game) = {
@@ -43,7 +47,7 @@ object Player {
 
 
   def rasingGame(game: Game): Int = {
-    val estimation = CardsEstimator.estimate(game.community_cards.asScala.toList ++ myCards)
+    val estimation = CardsEstimator.estimateWithHand(myCards, game.community_cards.asScala.toList)
 
     if(estimation >= 0.8) { // good cards
       if(minimumRaise >= game.players.asScala(game.in_action).stack) {

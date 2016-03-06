@@ -62,12 +62,12 @@ object CardsEstimator {
   def howFar(card1: Card, card2: Card) : Double = {
     val position1 : Int = getPosition(card1)
     val position2 : Int = getPosition(card2)
-    val diff = (5 - Math.abs(position2 - position1))
+    val diff = 5 - Math.abs(position2 - position1)
     if( diff < 0) 0 else diff * 0.01
   }
 
   def handPoints(l: List[Card]): Double = {
-    val card1 = l(0)
+    val card1 = l.head
     val card2 = l(1)
     getPointsFromCard(card1) + getPointsFromCard(card2) + howFar(card1,card2)
   }
