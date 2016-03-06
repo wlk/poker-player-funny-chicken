@@ -50,13 +50,26 @@ object CardsEstimator {
     countNumberOfRanks(l) > countNumberOfRanks(table)
   }
 
+  def numberOfPairs(l: List[Card]) : Int = {
+    l.groupBy(_.rank).mapValues(_.size).filter(x => x._2.eq(2)).size
+  }
+
+  def weHaveSecondPair(l: List[Card], table: List[Card]): Boolean = {
+    val ourPairs = numberOfPairs(l)
+    val tablePairs = numberOfPairs(table)
+    ourPairs == 2 && tablePairs < 2
+  }
+
   def estimate(l: List[Card], table : List[Card]): Double = {
 
     if(weHaveBetterPairs(l, table)) {
       0.9
     } else if (hasColor(l)) {
       0.95
-    } else {
+    } else if (weHaveSecondPair(l,table)) {
+      0.93
+    }
+    else {
       countPoints(l)
     }
 
@@ -117,6 +130,6 @@ object CardsEstimator {
     if(card1.rank.equals(card2.rank))
       0.2
     else
-    getPointsFromCard(card1) + getPointsFromCard(card2) + /*howFar(card1, card2) + */ sameColor(card1, card2)
+    getPointsFromCard(card1) + getPointsFromCard(card2) + /*howFar(card1, card2) +  sameColor(card1, card2)*/
   }
 }
