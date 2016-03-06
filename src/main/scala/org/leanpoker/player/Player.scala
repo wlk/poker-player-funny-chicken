@@ -5,7 +5,7 @@ import scala.collection.JavaConverters._
 import java.{util => ju}
 
 object Player {
-  val VERSION = "Funny Chicken 5"
+  val VERSION = "Funny Chicken 6"
 
   var game: Game = _
 
