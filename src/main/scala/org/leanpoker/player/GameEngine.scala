@@ -27,7 +27,11 @@ class GameEngine(game: Game) {
           if(estimation > 0.5 && shouldCall){
             call
           } else {
-            minimumRaise
+            if(shouldCall) {
+              minimumRaise
+            } else {
+              0
+            }
           }
         }
       }
