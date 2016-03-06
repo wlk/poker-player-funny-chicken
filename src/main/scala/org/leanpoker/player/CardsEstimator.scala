@@ -3,11 +3,116 @@ package org.leanpoker.player
 object CardsEstimator {
   def estimateWithHand(hand: List[Card], table: List[Card]): Double = {
     if (table.isEmpty) {
-      Math.min(handPoints(hand) * 5, 1)
+      //Math.min(handPoints(hand) * 5, 1)
+      val pos1 = getPosition(hand.head)
+      val pos2 = getPosition(hand(1))
+      val areSameColor = hand.head.suit == hand(1).suit
+
+
+
+      val result = mappings.get((Math.max(pos1, pos2), Math.min(pos1, pos2), areSameColor)) match {
+        case Some(rank) => rank
+        case None => 0
+      }
+
+      if(result > 4) {
+        1
+      } else {
+        0
+      }
+
     } else {
       Math.min(estimate(hand ++ table, table) + handPoints(hand), 1)
     }
   }
+
+  val mappings: Map[(Int, Int, Boolean), Int] = Map(
+    (1, 1, false) -> 7,
+    (2, 2, false) -> 7,
+    (3, 3, false) -> 7,
+    (4, 4, false) -> 6,
+    (5, 5, false) -> 6,
+    (6, 6, false) -> 5,
+    (7, 7, false) -> 4,
+    (8, 8, false) -> 3,
+    (9, 9, false) -> 2,
+    (10, 10, false) -> 1,
+    (11, 11, false) -> 1,
+    (12, 12, false) -> 1,
+    (13, 13, false) -> 1,
+    (13, 12, false) -> 2,
+    (13, 11, false) -> 3,
+    (13, 10, false) -> 4,
+    (13, 9, false) -> 6,
+    (13, 8, false) -> 8,
+    (12, 11, false) -> 4,
+    (12, 10, false) -> 5,
+    (12, 9, false) -> 6,
+    (12, 8, false) -> 8,
+    (11, 10, false) -> 5,
+    (11, 9, false) -> 6,
+    (11, 8, false) -> 8,
+    (10, 9, false) -> 5,
+    (10, 8, false) -> 7,
+    (10, 7, false) -> 8,
+    (9, 8, false) -> 7,
+    (9, 7, false) -> 8,
+    (8, 7, false) -> 7,
+    (7, 6, false) -> 8,
+    (6, 5, false) -> 8,
+    (5, 4, false) -> 8,
+    (4, 3, false) -> 8,
+    (13, 12, true) -> 1,
+    (13, 11, true) -> 2,
+    (13, 10, true) -> 2,
+    (13, 9, true) -> 3,
+    (13, 8, true) -> 5,
+    (13, 7, true) -> 5,
+    (13, 6, true) -> 5,
+    (13, 5, true) -> 5,
+    (13, 4, true) -> 5,
+    (13, 3, true) -> 5,
+    (13, 2, true) -> 5,
+    (13, 1, true) -> 5,
+    (12, 11, true) -> 2,
+    (12, 10, true) -> 3,
+    (12, 9, true) -> 4,
+    (12, 8, true) -> 6,
+    (12, 7, true) -> 7,
+    (12, 6, true) -> 7,
+    (12, 5, true) -> 7,
+    (12, 4, true) -> 7,
+    (12, 3, true) -> 7,
+    (12, 2, true) -> 7,
+    (12, 1, true) -> 7,
+    (11, 10, true) -> 3,
+    (11, 9, true) -> 4,
+    (11, 8, true) -> 5,
+    (11, 7, true) -> 7,
+    (10, 9, true) -> 3,
+    (10, 8, true) -> 4,
+    (10, 7, true) -> 5,
+    (10, 6, true) -> 7,
+    (9, 8, true) -> 4,
+    (9, 7, true) -> 5,
+    (9, 6, true) -> 7,
+    (8, 7, true) -> 4,
+    (8, 6, true) -> 5,
+    (8, 5, true) -> 8,
+    (7, 6, true) -> 5,
+    (7, 5, true) -> 6,
+    (7, 4, true) -> 8,
+    (6, 5, true) -> 5,
+    (6, 4, true) -> 6,
+    (6, 3, true) -> 7,
+    (5, 4, true) -> 7,
+    (5, 3, true) -> 7,
+    (4, 3, true) -> 6,
+    (4, 2, true) -> 7,
+    (3, 2, true) -> 7,
+    (3, 1, true) -> 8,
+    (2, 1, true) -> 8
+  )
 
   def hasColor(l: List[Card]) : Boolean = {
     l.groupBy(_.suit).mapValues(_.size).exists(g => g._2 > 3)
