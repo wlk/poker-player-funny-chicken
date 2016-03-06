@@ -6,11 +6,10 @@ import java.{util => ju}
 
 object Player {
   val VERSION = "Funny Chicken 1"
-  var game: Game = _
-  val gson = new Gson
 
   def betRequest(request: JsonElement) = {
-    game = gson.fromJson(request, classOf[Game])
+    val gson = new Gson
+    val game: Game = gson.fromJson(request, classOf[Game])
     requestGame(game)
   }
 
