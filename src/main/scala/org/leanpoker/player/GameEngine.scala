@@ -24,10 +24,41 @@ class GameEngine(game: Game) {
         if (isAllIn) {
           0
         } else {
-          call
+          if(estimation > 0.5){
+            call
+          } else {
+            minimumRaise
+          }
         }
       }
     }
+  }
+
+  def estimate(stack: Int, estimated: Double, minimumRaise: Int, call: Int): Int = {
+    val estimation = CardsEstimator.estimateWithHand(myCards, game.community_cards.asScala.toList)
+
+    def shouldRaise: Boolean = {
+      estimation >= 0.8
+    }
+
+    def shouldCall: Boolean = true
+    def shouldFold: Boolean = true
+
+    if (shouldRaise) {
+
+    } else {
+      if (shouldCall) {
+
+      } else {
+        if (shouldFold) {
+
+        }
+        else {
+
+        }
+      }
+    }
+    0
   }
 
 
