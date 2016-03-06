@@ -91,6 +91,7 @@ object CardsEstimator {
       case "Q" => 11
       case "K" => 12
       case "A" => 13
+      case _ => 0
     }
   }
 
