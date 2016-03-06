@@ -11,6 +11,10 @@ object Player {
 
   def betRequest(request: JsonElement) = {
     game = gson.fromJson(request, classOf[Game])
+    requestGame(game)
+  }
+
+  def requestGame(game: Game) = {
     20
   }
 
