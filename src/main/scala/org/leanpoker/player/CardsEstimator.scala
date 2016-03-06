@@ -41,13 +41,17 @@ object CardsEstimator {
     false
   }
 
-  def onlyWeHavePair(l: List[Card], table : List[Card]) : Boolean = {
-    hasPair(l) && !hasPair(table)
+  def countNumberOfRanks(l: List[Card]): Int = {
+    l.groupBy(_.rank).mapValues(_.size).maxBy(f => f._2)._2
+  }
+
+  def weHaveBetterPairs(l: List[Card], table : List[Card]) : Boolean = {
+    countNumberOfRanks(l) > countNumberOfRanks(table)
   }
 
   def estimate(l: List[Card], table : List[Card]): Double = {
 
-    if(onlyWeHavePair(l, table)) {
+    if(weHaveBetterPairs(l, table)) {
       0.9
     } else if (hasColor(l)) {
       0.95
