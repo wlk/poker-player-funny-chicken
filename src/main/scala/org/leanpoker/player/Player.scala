@@ -5,7 +5,7 @@ import scala.collection.JavaConverters._
 import java.{util => ju}
 
 object Player {
-  val VERSION = "Funny Chicken 4"
+  val VERSION = "Funny Chicken 5"
 
   var game: Game = _
 
@@ -34,17 +34,23 @@ object Player {
       current_buy_in - my_bet + minimum_raise
     }
 
-    val toReturn = raise(game.current_buy_in, game.players.asScala(game.in_action).bet, game.minimum_raise)
-    if(toReturn >= game.players.asScala(game.in_action).stack) { //all in
-      if(CardsEstimator.estimate(game.community_cards.asScala.toList ++ myCards) >= 0.8) {
-        toReturn
+    val minimumRaise = raise(game.current_buy_in, game.players.asScala(game.in_action).bet, game.minimum_raise)
+    val estimation = CardsEstimator.estimate(game.community_cards.asScala.toList ++ myCards)
+
+    if(estimation >= 0.8) { // good cards
+      if(minimumRaise >= game.players.asScala(game.in_action).stack) {
+        // all in
+        minimumRaise
       } else {
-        0
+        (minimumRaise * (1 + estimation)).toInt
       }
     } else {
-      toReturn + 1
+      if (estimation < 0.3) { // bad cards
+        0
+      } else { // ok cards
+        minimumRaise
+      }
     }
-
   }
 
 
