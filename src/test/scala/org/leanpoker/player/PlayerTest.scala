@@ -110,4 +110,10 @@ class PlayerTest extends FunSpec with MustMatchers {
     CardsEstimator.hasColor(cl) must be (false)
   }
 
+  it("badHand") {
+    val cl : List[Card] = List(Card("2", "spades"), Card("3", "hearts"))
+
+    CardsEstimator.estimateWithHand(cl, List.empty) must be (0.0)
+  }
+
 }
