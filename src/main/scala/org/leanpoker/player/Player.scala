@@ -4,7 +4,7 @@ import com.google.gson.{Gson, JsonElement}
 import java.{util => ju}
 
 object Player {
-  val VERSION = "Funny Chicken 25"
+  val VERSION = "Funny Chicken 26"
 
   var game: Game = _
 
@@ -15,8 +15,6 @@ object Player {
       requestGame(game)
     } catch {
       case e: Throwable =>
-        println("error" + e)
-        Console.err.println("error" + e)
         0
     }
   }
