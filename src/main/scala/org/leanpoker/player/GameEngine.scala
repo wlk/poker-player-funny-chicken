@@ -9,7 +9,7 @@ class GameEngine(game: Game) {
 
     if (estimation >= 0.8) {
       // good cards
-      if (minimumRaise >= game.players.asScala(game.in_action).stack) {
+      if (isAllIn) {
         // all in
         minimumRaise
       } else {
@@ -38,12 +38,14 @@ class GameEngine(game: Game) {
   def isAllIn = {
     minimumRaise >= game.players.asScala(game.in_action).stack
   }
+
   def call = {
     def bet(current_buy_in: Int, my_bet: Int): Int = {
       current_buy_in - my_bet
     }
     bet(game.current_buy_in, game.players.asScala(game.in_action).bet)
   }
+
   def minimumRaise = {
     def raise(current_buy_in: Int, my_bet: Int, minimum_raise: Int): Int = {
       current_buy_in - my_bet + minimum_raise
