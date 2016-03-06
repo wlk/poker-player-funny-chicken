@@ -4,7 +4,7 @@ import com.google.gson.{Gson, JsonElement}
 import java.{util => ju}
 
 object Player {
-  val VERSION = "Funny Chicken 21"
+  val VERSION = "Funny Chicken 22"
 
   var game: Game = _
 
