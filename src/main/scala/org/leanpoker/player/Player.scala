@@ -1,7 +1,8 @@
 package org.leanpoker.player
 
-import com.google.gson.{Gson, JsonElement}
 import java.{util => ju}
+
+import com.google.gson.{Gson, JsonElement}
 
 object Player {
   val VERSION = "Funny Chicken 27"

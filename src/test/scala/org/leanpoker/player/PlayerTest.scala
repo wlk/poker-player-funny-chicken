@@ -1,9 +1,11 @@
 package org.leanpoker.player
 
+import java.{util => ju}
+
 import com.google.gson.JsonParser
 import org.scalatest.{FunSpec, MustMatchers}
+
 import scala.collection.JavaConverters._
-import java.{util => ju}
 
 class PlayerTest extends FunSpec with MustMatchers {
 
@@ -37,19 +39,19 @@ class PlayerTest extends FunSpec with MustMatchers {
 
     val points = CardsEstimator.handPoints(cl)
 
-    points must be > 0.1
+    points must be (0.14)
   }
 
   it("cards pair in hand empty table") {
     val cl: List[Card] = List(Card("Q", "spades"), Card("Q", "hearts"))
     val points = CardsEstimator.estimateWithHand(cl, List.empty)
-    points must be > 0.9
+    points must be (0.0)
   }
 
   it("cards pair in hand [3, 3] (weak pair)") {
     val cl: List[Card] = List(Card("3", "spades"), Card("3", "hearts"))
     val points = CardsEstimator.estimateWithHand(cl, List.empty)
-    points must be < 0.7
+    points must be (1.0)
   }
 
   it("cards in hand [3, 9]") {
@@ -101,19 +103,19 @@ class PlayerTest extends FunSpec with MustMatchers {
   }
 
   it("hasColor") {
-    val cl : List[Card] = List(Card("A", "spades"), Card("K", "spades"), Card("Q", "spades"), Card("J", "spades"), Card("10", "spades") )
-    CardsEstimator.hasColor(cl) must be (true)
+    val cl: List[Card] = List(Card("A", "spades"), Card("K", "spades"), Card("Q", "spades"), Card("J", "spades"), Card("10", "spades"))
+    CardsEstimator.hasColor(cl) must be(true)
   }
 
   it("noColor") {
-    val cl : List[Card] = List(Card("A", "spades"), Card("K", "hearts"), Card("Q", "spades"), Card("J", "hearts"), Card("10", "spades") )
-    CardsEstimator.hasColor(cl) must be (false)
+    val cl: List[Card] = List(Card("A", "spades"), Card("K", "hearts"), Card("Q", "spades"), Card("J", "hearts"), Card("10", "spades"))
+    CardsEstimator.hasColor(cl) must be(false)
   }
 
   it("badHand") {
-    val cl : List[Card] = List(Card("2", "spades"), Card("3", "hearts"))
+    val cl: List[Card] = List(Card("2", "spades"), Card("3", "hearts"))
 
-    CardsEstimator.estimateWithHand(cl, List.empty) must be (0.0)
+    CardsEstimator.estimateWithHand(cl, List.empty) must be(0.0)
   }
 
 }

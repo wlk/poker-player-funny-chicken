@@ -1,31 +1,6 @@
 package org.leanpoker.player
 
 object CardsEstimator {
-  def estimateWithHand(hand: List[Card], table: List[Card]): Double = {
-    if (table.isEmpty) {
-      //Math.min(handPoints(hand) * 5, 1)
-      val pos1 = getPosition(hand.head)
-      val pos2 = getPosition(hand(1))
-      val areSameColor = hand.head.suit == hand(1).suit
-
-
-
-      val result = mappings.get((Math.max(pos1, pos2), Math.min(pos1, pos2), areSameColor)) match {
-        case Some(rank) => rank
-        case None => 0
-      }
-
-      if(result > 4) {
-        1
-      } else {
-        0
-      }
-
-    } else {
-      Math.min(estimate(hand ++ table, table) + handPoints(hand), 1)
-    }
-  }
-
   val mappings: Map[(Int, Int, Boolean), Int] = Map(
     (1, 1, false) -> 7,
     (2, 2, false) -> 7,
@@ -114,7 +89,44 @@ object CardsEstimator {
     (2, 1, true) -> 8
   )
 
-  def hasColor(l: List[Card]) : Boolean = {
+  def estimateWithHand(hand: List[Card], table: List[Card]): Double = {
+    if (table.isEmpty) {
+      val pos1 = getPosition(hand.head)
+      val pos2 = getPosition(hand(1))
+      val areSameColor = hand.head.suit == hand(1).suit
+
+      val result = mappings.get((Math.max(pos1, pos2), Math.min(pos1, pos2), areSameColor)) match {
+        case Some(rank) => rank
+        case None => 0
+      }
+
+      if (result > 4) {
+        1
+      } else {
+        0
+      }
+
+    } else {
+      Math.min(estimate(hand ++ table, table) + handPoints(hand), 1)
+    }
+  }
+
+  def estimate(l: List[Card], table: List[Card]): Double = {
+
+    if (weHaveBetterPairs(l, table)) {
+      0.9
+    } else if (hasColor(l)) {
+      0.95
+    } else if (weHaveSecondPair(l, table)) {
+      0.93
+    }
+    else {
+      countPoints(l)
+    }
+
+  }
+
+  def hasColor(l: List[Card]): Boolean = {
     l.groupBy(_.suit).mapValues(_.size).exists(g => g._2 > 3)
   }
 
@@ -135,28 +147,12 @@ object CardsEstimator {
     good
   }
 
-  def hasPair(l: List[Card] ): Boolean = {
-    for {
-      c1i <- l.indices
-      c2i <- c1i + 1 until l.size
-    } yield {
-      if (l(c1i).rank.equals(l(c2i).rank)) {
-        true
-      }
-    }
-    false
+  def weHaveBetterPairs(l: List[Card], table: List[Card]): Boolean = {
+    countNumberOfRanks(l) > countNumberOfRanks(table)
   }
 
   def countNumberOfRanks(l: List[Card]): Int = {
     l.groupBy(_.rank).mapValues(_.size).maxBy(f => f._2)._2
-  }
-
-  def weHaveBetterPairs(l: List[Card], table : List[Card]) : Boolean = {
-    countNumberOfRanks(l) > countNumberOfRanks(table)
-  }
-
-  def numberOfPairs(l: List[Card]) : Int = {
-    l.groupBy(_.rank).mapValues(_.size).count(x => x._2 == 2)
   }
 
   def weHaveSecondPair(l: List[Card], table: List[Card]): Boolean = {
@@ -165,33 +161,8 @@ object CardsEstimator {
     ourPairs == 2 && tablePairs < 2
   }
 
-  def estimate(l: List[Card], table : List[Card]): Double = {
-
-    if(weHaveBetterPairs(l, table)) {
-      0.9
-    } else if (hasColor(l)) {
-      0.95
-    } else if (weHaveSecondPair(l,table)) {
-      0.93
-    }
-    else {
-      countPoints(l)
-    }
-
-  }
-
-  def getPointsFromCard(card1: Card): Double = {
-    card1.rank match {
-      case "A" => 0.06
-      case "K" => 0.05
-      case "Q" => 0.04
-      case "J" => 0.03
-      case "10" => 0.02
-      case "9" => 0.02
-      case "8" => 0.01
-      case "7" => 0.01
-      case _ => 0.0
-    }
+  def numberOfPairs(l: List[Card]): Int = {
+    l.groupBy(_.rank).mapValues(_.size).count(x => x._2 == 2)
   }
 
   def getPosition(card: Card): Int = {
@@ -213,6 +184,57 @@ object CardsEstimator {
     }
   }
 
+  def handPoints(l: List[Card]): Double = {
+    val card1 = l.head
+    val card2 = l(1)
+    if (card1.rank.equals(card2.rank) && getPosition(card1) >= 7) {
+      if (getPosition(card1) >= 10) {
+        0.2
+      }
+      else {
+        0.1
+      }
+    }
+    else {
+      getPointsFromCard(card1) + getPointsFromCard(card2) /* + howFar(card1, card2) */ + sameColor(card1, card2)
+    }
+  }
+
+  def getPointsFromCard(card1: Card): Double = {
+    card1.rank match {
+      case "A" => 0.06
+      case "K" => 0.05
+      case "Q" => 0.04
+      case "J" => 0.03
+      case "10" => 0.02
+      case "9" => 0.02
+      case "8" => 0.01
+      case "7" => 0.01
+      case _ => 0.0
+    }
+  }
+
+  def sameColor(card1: Card, card2: Card): Double = {
+    if (card1.suit.equals(card2.suit)) {
+      0.03
+    }
+    else {
+      0.0
+    }
+  }
+
+  def hasPair(l: List[Card]): Boolean = {
+    for {
+      c1i <- l.indices
+      c2i <- c1i + 1 until l.size
+    } yield {
+      if (l(c1i).rank.equals(l(c2i).rank)) {
+        true
+      }
+    }
+    false
+  }
+
   def howFar(card1: Card, card2: Card): Double = {
     val position1: Int = getPosition(card1)
     val position2: Int = getPosition(card2)
@@ -222,22 +244,5 @@ object CardsEstimator {
     } else {
       diff * 0.01
     }
-  }
-
-  def sameColor(card1: Card, card2: Card): Double = {
-    if (card1.suit.equals(card2.suit)) 0.03
-    else 0.0
-  }
-
-  def handPoints(l: List[Card]): Double = {
-    val card1 = l.head
-    val card2 = l(1)
-    if (card1.rank.equals(card2.rank) && getPosition(card1) >= 7)
-      if(getPosition(card1) >= 10)
-        0.2
-      else
-        0.1
-    else
-    getPointsFromCard(card1) + getPointsFromCard(card2)  /* + howFar(card1, card2) */ + sameColor(card1, card2)
   }
 }

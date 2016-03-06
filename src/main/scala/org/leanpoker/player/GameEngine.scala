@@ -5,7 +5,8 @@ import scala.collection.JavaConverters._
 class GameEngine(game: Game) {
 
   def processGame: Int = {
-    val estimation = lowPlayersEstimationFix(CardsEstimator.estimateWithHand(myCards, game.community_cards.asScala.toList),
+    val estimation = lowPlayersEstimationFix(CardsEstimator
+      .estimateWithHand(myCards, game.community_cards.asScala.toList),
       getNumberOfActivePlayers)
 
 
@@ -41,21 +42,25 @@ class GameEngine(game: Game) {
 
     if (game.round < 2) {
       val weBetEarly = Math.max(toBet, 60)
-      if (game.current_buy_in > weBetEarly)
+      if (game.current_buy_in > weBetEarly) {
         0
-      else
+      }
+      else {
         weBetEarly
+      }
     } else {
       toBet
     }
   }
 
-  def lowPlayersEstimationFix(estimation : Double, numberOfPlayers : Int): Double = {
-    if(numberOfPlayers < 4) {
-      if(estimation > 0.8)
+  def lowPlayersEstimationFix(estimation: Double, numberOfPlayers: Int): Double = {
+    if (numberOfPlayers < 4) {
+      if (estimation > 0.8) {
         1
-      else
+      }
+      else {
         0
+      }
     } else {
       estimation
     }
@@ -69,6 +74,28 @@ class GameEngine(game: Game) {
 
   def shouldCall = {
     stack * 0.4 <= call
+  }
+
+  def stack = {
+    game.players.asScala(game.in_action).stack
+  }
+
+  def call = {
+    def bet(current_buy_in: Int, my_bet: Int): Int = {
+      current_buy_in - my_bet
+    }
+    bet(game.current_buy_in, game.players.asScala(game.in_action).bet)
+  }
+
+  def isAllIn = {
+    minimumRaise >= stack
+  }
+
+  def minimumRaise = {
+    def raise(current_buy_in: Int, my_bet: Int, minimum_raise: Int): Int = {
+      current_buy_in - my_bet + minimum_raise
+    }
+    raise(game.current_buy_in, game.players.asScala(game.in_action).bet, game.minimum_raise)
   }
 
   def estimate(stack: Int, estimated: Double, minimumRaise: Int, call: Int): Int = {
@@ -98,30 +125,7 @@ class GameEngine(game: Game) {
     0
   }
 
-
   def myCards = {
     game.players.asScala(game.in_action).hole_cards.asScala.toList
-  }
-
-  def isAllIn = {
-    minimumRaise >= stack
-  }
-
-  def stack = {
-    game.players.asScala(game.in_action).stack
-  }
-
-  def call = {
-    def bet(current_buy_in: Int, my_bet: Int): Int = {
-      current_buy_in - my_bet
-    }
-    bet(game.current_buy_in, game.players.asScala(game.in_action).bet)
-  }
-
-  def minimumRaise = {
-    def raise(current_buy_in: Int, my_bet: Int, minimum_raise: Int): Int = {
-      current_buy_in - my_bet + minimum_raise
-    }
-    raise(game.current_buy_in, game.players.asScala(game.in_action).bet, game.minimum_raise)
   }
 }
