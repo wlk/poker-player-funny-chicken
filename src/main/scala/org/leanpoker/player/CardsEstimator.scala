@@ -111,6 +111,6 @@ object CardsEstimator {
     if(card1.rank.equals(card2.rank))
       0.2
     else
-    getPointsFromCard(card1) + getPointsFromCard(card2) + howFar(card1, card2) + sameColor(card1, card2)
+    getPointsFromCard(card1) + getPointsFromCard(card2) + /*howFar(card1, card2) + */ sameColor(card1, card2)
   }
 }
