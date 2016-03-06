@@ -39,4 +39,14 @@ class PlayerTest extends FunSpec with MustMatchers {
     points must be > 0.1
   }
 
+  it("hasColor") {
+    val cl : List[Card] = List(Card("A", "spades"), Card("K", "spades"), Card("Q", "spades"), Card("J", "spades"), Card("10", "spades") )
+    CardsEstimator.hasColor(cl) must be (true)
+  }
+
+  it("noColor") {
+    val cl : List[Card] = List(Card("A", "spades"), Card("K", "hearts"), Card("Q", "spades"), Card("J", "hearts"), Card("10", "spades") )
+    CardsEstimator.hasColor(cl) must be (false)
+  }
+
 }
