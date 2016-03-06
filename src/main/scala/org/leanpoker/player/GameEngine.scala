@@ -56,13 +56,15 @@ class GameEngine(game: Game) {
         1
       else
         0
+    } else {
+      estimation
     }
-    estimation
+
   }
 
   def getNumberOfActivePlayers = {
     val players = game.players.asScala
-    players.filter(_.status == "active").size
+    players.count(_.status == "active")
   }
 
   def shouldCall = {
