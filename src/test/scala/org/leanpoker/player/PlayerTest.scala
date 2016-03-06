@@ -46,10 +46,10 @@ class PlayerTest extends FunSpec with MustMatchers {
     points must be > 0.9
   }
 
-  it("cards pair in hand [3, 3]") {
+  it("cards pair in hand [3, 3] (weak pair)") {
     val cl: List[Card] = List(Card("3", "spades"), Card("3", "hearts"))
     val points = CardsEstimator.estimateWithHand(cl, List.empty)
-    points must be > 0.7
+    points must be < 0.7
   }
 
   it("cards in hand [3, 9]") {
