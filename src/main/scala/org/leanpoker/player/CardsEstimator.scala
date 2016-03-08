@@ -95,15 +95,9 @@ object CardsEstimator {
       val pos2 = getPosition(hand(1))
       val areSameColor = hand.head.suit == hand(1).suit
 
-      val result = mappings.get((Math.max(pos1, pos2), Math.min(pos1, pos2), areSameColor)) match {
-        case Some(rank) => rank
-        case None => 0
-      }
-
-      if (result > 4) {
-        1
-      } else {
-        0
+      mappings.get((Math.max(pos1, pos2), Math.min(pos1, pos2), areSameColor)) match {
+        case Some(rank) if rank <= 4 => 1
+        case _ => 0
       }
 
     } else {
